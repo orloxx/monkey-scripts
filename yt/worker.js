@@ -1,7 +1,6 @@
 let timeout$;
 
 function startInterval() {
-  throw new Error('Not implemented');
   let lastTime = 0;
 
   (function loop() {
@@ -22,6 +21,13 @@ function startInterval() {
   })();
 }
 
-onmessage = function() {
-  startInterval();
+onmessage = function(e) {
+  postMessage({ e, d: document });
+  switch (e.data) {
+    case 'start':
+      // startInterval();
+      break;
+    default:
+      break;
+  }
 }

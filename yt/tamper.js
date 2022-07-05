@@ -12,12 +12,23 @@
 (function() {
   'use strict';
 
+  function getWorkerURL( url ) {
+    const content = `importScripts( "${ url }" );`;
+    return URL.createObjectURL( new Blob( [ content ], { type: "text/javascript" } ) );
+  }
+
   if (window.Worker) {
-    const worker = new Worker('https://raw.githubusercontent.com/orloxx/monkey-scripts/main/yt/worker.js');
-    worker.postMessage('nada');
+    const url = 'https://raw.githubusercontent.com/orloxx/monkey-scripts/main/yt/worker.js';
+    const worker = new Worker(getWorkerURL(url));
 
     worker.onerror = function(error) {
-      console.error('WebWorkerError: ', error);
+      worker.terminate();
     }
+
+    worker.onmessage = function(e) {
+      console.log('worker responding', e);
+    }
+
+    worker.postMessage('start');
   }
 })();
