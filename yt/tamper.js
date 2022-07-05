@@ -12,23 +12,26 @@
 (function() {
   'use strict';
 
-  function getWorkerURL( url ) {
-    const content = `importScripts( "${ url }" );`;
-    return URL.createObjectURL( new Blob( [ content ], { type: "text/javascript" } ) );
+  function startInterval() {
+    let lastTime = 0;
+
+    (function loop() {
+      setTimeout(loop, 1);
+
+      const now = Date.now();
+      if (lastTime < now - 3000) {
+        const areYouThereModal = document.querySelector('ytmusic-you-there-renderer');
+
+        if (areYouThereModal) {
+          const yesButton = areYouThereModal.querySelector('yt-button-renderer');
+
+          if (yesButton && yesButton.clientHeight > 0) {
+            yesButton.click();
+          }
+        }
+      }
+    })();
   }
 
-  if (window.Worker) {
-    const url = 'https://raw.githubusercontent.com/orloxx/monkey-scripts/main/yt/worker.js';
-    const worker = new Worker(getWorkerURL(url));
-
-    worker.onerror = function(error) {
-      worker.terminate();
-    }
-
-    worker.onmessage = function(e) {
-      console.log('worker responding', e);
-    }
-
-    worker.postMessage('start');
-  }
+  startInterval();
 })();
