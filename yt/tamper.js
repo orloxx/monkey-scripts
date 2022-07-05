@@ -14,11 +14,10 @@
 
   if (window.Worker) {
     const worker = new Worker('https://raw.githubusercontent.com/orloxx/monkey-scripts/main/yt/worker.js');
+    worker.postMessage('nada');
 
-    worker.onmessage = function(e) {
-      if (e.data === 'ready') {
-        worker.postMessage('ready');
-      }
-    };
+    worker.onerror = function(error) {
+      console.error('WebWorkerError: ', error);
+    }
   }
 })();
