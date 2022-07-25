@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         YouTube: automated AYA
 // @namespace    https://iker.io
-// @version      0.1
+// @version      0.2
 // @description  YouTube Music Player performs an are-you-alive check sometimes. This will click "Yes" always.
 // @author       iker.io
 // @match        https://music.youtube.com/*
@@ -12,26 +12,19 @@
 (function() {
   'use strict';
 
-  function startInterval() {
-    let lastTime = 0;
+  const $parent = document.querySelector('ytmusic-popup-container');
+  const observer = new MutationObserver(() => {
+    const $areYouThereModal = document.querySelector('ytmusic-you-there-renderer');
+    if ($areYouThereModal) {
+      const yesButton = $areYouThereModal.querySelector('yt-button-renderer');
 
-    (function loop() {
-      setTimeout(loop, 1);
-
-      const now = Date.now();
-      if (lastTime < now - 3000) {
-        const areYouThereModal = document.querySelector('ytmusic-you-there-renderer');
-
-        if (areYouThereModal) {
-          const yesButton = areYouThereModal.querySelector('yt-button-renderer');
-
-          if (yesButton && yesButton.clientHeight > 0) {
-            yesButton.click();
-          }
-        }
+      if (yesButton && yesButton.clientHeight > 0) {
+        yesButton.click();
       }
-    })();
-  }
+    }
+  });
 
-  startInterval();
+  observer.observe($parent, {
+    subtree: true,
+  });
 })();
