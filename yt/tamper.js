@@ -18,9 +18,11 @@
     if ($areYouThereModal) {
       const yesButton = $areYouThereModal.querySelector('yt-button-renderer');
 
-      if (yesButton && yesButton.clientHeight > 0) {
-        yesButton.click();
-      }
+      requestAnimationFrame(() => {
+        if (yesButton && yesButton.clientHeight > 0) {
+          yesButton.click();
+        }
+      });
     }
   });
 
